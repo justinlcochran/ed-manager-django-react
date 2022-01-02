@@ -1,3 +1,8 @@
+body {
+  color: white;
+  background: #282c34;
+}
+
 .App {
   text-align: center;
 }
@@ -35,4 +40,146 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.nav-li {
+  float: left;
+  width: 25%;
+}
+
+.nav-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+
+.nav-link, .nav-li{
+  display: block;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+
+  alignment: center;
+}
+
+.nav-link {
+  padding: 5% 0%;
+}
+
+.nav-li:hover:not(.active) {
+  background-color: #111;
+}
+
+.active {
+  background-color: #04AA6D;
+}
+
+.standard-list {
+  list-style-type: none;
+}
+
+.button-label {
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  padding: 35%;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 10px;
+  display: block;
+
+}
+
+.options-div {
+  height: 0;
+  padding-bottom: 56.25%;
+  position: relative;
+  justify-content: center;
+  display: flex;
+}
+
+.options-table {
+  position: relative;
+  top: 0; left: 0;
+  height: 100%; width: 100%;
+  margin: 50px auto;
+  align-self: center
+}
+
+td {
+  text-align: center;
+}
+
+.top-td {
+  vertical-align: top;
+}
+
+.popup {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* The actual popup */
+.popup .popuptext {
+  visibility: hidden;
+  width: 450px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px 8px;
+  position: absolute;
+  z-index: 1;
+  bottom: 50%;
+  left: 50%;
+  margin-left: -225px;
+  opacity: 90%;
+
+}
+
+/* Popup arrow */
+.popup .popuptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+/* Toggle this class - hide and show the popup */
+.popup .show {
+  visibility: visible;
+  -webkit-animation: fadeIn .4s;
+  animation: fadeIn .4s;
+}
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 0.9;}
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity:0.9 ;}
+}
+
+.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.text-box {
+  height: 34px;
 }

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.conf import settings
 
 
 class User(AbstractUser):
@@ -25,3 +26,16 @@ class Standard(models.Model):
 
     def __str__(self):
         return self.code
+
+
+class KnowShowChart(models.Model):
+    content = models.JSONField()
+    standard = models.ForeignKey(Standard, on_delete=models.CASCADE)
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    created = models.DateField(auto_now_add=True)
+
+    # def get_assessments(self):
+    #     return self.assessment_set.all()
+
+    def __str__(self):
+        return f'{self.standard} created by {self.creator} on {self.created}'
