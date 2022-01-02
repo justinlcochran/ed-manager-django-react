@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 
-function StandardSelector(props) {
+function StandardSelector({ selectStandard }) {
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [items, setItems] = useState([]);
@@ -10,6 +10,7 @@ function StandardSelector(props) {
         const data = items.find((d) => d.id == e.target.value);
         setStandardText(data.text)
     }
+
 
     // Note: the empty deps array [] means
     // this useEffect will run once
@@ -39,7 +40,7 @@ function StandardSelector(props) {
     } else {
         return (
             <div>
-                <select defaultValue={'1'} onChange={handleChange} id="standardsDropDown" name="standardsDropDown" form="chartBuilder">
+                <select defaultValue={'1'} onChange={e =>handleChange({e: e})} id="standardsDropDown" name="standardsDropDown" form="chartBuilder">
                     <option disabled value="1">Select a Standard</option>
                     {items.map(item => (
                         <option key={item.code} value={item.id}>{item.code}</option>

@@ -31,6 +31,7 @@ function TeacherHome(props) {
     } else if (!isLoaded) {
         return <div>Loading...</div>;
     } else {
+        console.log(items)
         return (
             <ul className={'standard-list'}>
                 {items.map(item => (
