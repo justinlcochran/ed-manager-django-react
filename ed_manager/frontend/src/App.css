@@ -44,7 +44,12 @@ body {
 
 .nav-li {
   float: left;
-  width: 25%;
+  width: 20%;
+  cursor: pointer;
+}
+
+.nav-p {
+  margin: 0;
 }
 
 .nav-list {

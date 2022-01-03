@@ -9,9 +9,8 @@ function ChartColumn({title, popUpText, setFieldValues, fields, catIndex}) {
     const handleAdd = () => {
         let newTextArea = [...textAreas, {colType:title, textAreaId: textAreas[textAreas.length-1].textAreaId+1, placeholder: 'Type Here...'}]
         setTextAreas(newTextArea)
-
     }
-    console.log(textAreas)
+
     return (
         <td className={"top-td"}>
             <div>

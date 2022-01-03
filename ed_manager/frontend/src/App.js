@@ -4,19 +4,24 @@ import NavBar from './components/NavBar';
 import TeacherHome from './pages/TeacherHome';
 import TeacherCreate from './pages/TeacherCreate';
 import KnowShowCreate from "./pages/KnowShowCreate";
+import {AuthProvider} from "./context/AuthContext";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
+import LoginPage from "./pages/LoginPage";
 
 function App() {
   return (
     <div className="App">
 
       <BrowserRouter>
-        <NavBar />
-          <Routes>
-            <Route path='/' exact element={<TeacherHome />} />
-            <Route path='/create' element={<TeacherCreate />} />
-            <Route path='/create/knowShowChart' element={<KnowShowCreate />} />
-          </Routes>
+        <AuthProvider>
+          <NavBar />
+            <Routes>
+              <Route path='/login' element={<LoginPage />} />
+              <Route path='/' exact element={<TeacherHome />} />
+              <Route path='/create' element={<TeacherCreate />} />
+              <Route path='/create/knowShowChart' element={<KnowShowCreate />} />
+            </Routes>
+        </AuthProvider>
       </BrowserRouter>
     </div>
   );
