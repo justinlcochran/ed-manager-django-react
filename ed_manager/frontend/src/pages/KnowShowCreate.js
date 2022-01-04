@@ -2,17 +2,12 @@ import React, {useContext, useState} from 'react';
 import ChartColumn from "../components/ChartColumn";
 import StandardSelector from "../components/StandardSelector";
 import AuthContext from "../context/AuthContext";
+import StandardContext from "../context/StandardContext";
 
 function KnowShowCreate(props) {
     let {user} = useContext(AuthContext)
+    let {selectedStandard} = useContext(StandardContext)
 
-    let [standard, setStandard] = useState({id: null, code: null, text:'Choose a Standard', subject:null})
-    const [items, setItems] = useState([]);
-
-    const handleChange = (e) => {
-        let obj = items.find(item => item.id == e.target.value)
-        setStandard(obj)
-    }
 
     const [fieldsValues, setFieldsValues] = useState(
         {know: {}, show: {}, scaffold: {}}
@@ -20,13 +15,13 @@ function KnowShowCreate(props) {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        const serverURL = 'http://127.0.0.1:8000/api/createknowshow/'
+        const serverURL = '/createknowshow/'
         const response = await fetch(serverURL, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({fields: fieldsValues, standard: standard, user: user})
+            body: JSON.stringify({fields: fieldsValues, standard: selectedStandard, user: user})
         });
         const data = await response;
         return data
@@ -39,7 +34,7 @@ function KnowShowCreate(props) {
     return (
         <div>
             <form onSubmit={handleSubmit}>
-                <StandardSelector standard={standard} setStandard={setStandard} items={items} setItems={setItems} handleChange={handleChange} />
+                <StandardSelector />
                 <table className={'center'}>
                     <tbody>
                     <tr>

@@ -1,31 +1,29 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import StandardSelector from "../components/StandardSelector";
-import {CreateAssessmentProvider} from "../context/CreateAssessmentContext";
+import CreateAssessmentContext, {CreateAssessmentProvider} from "../context/CreateAssessmentContext";
+import StandardContext from "../context/StandardContext";
 
 function CreateAssessment(props) {
-
-    let [standard, setStandard] = useState({id: null, code: null, text:'Choose a Standard', subject:null})
+    let {knowShowRequired, setKnowShowRequired} = useContext(CreateAssessmentContext)
+    let {selectedStandard} = useContext(StandardContext)
     let [items, setItems] = useState([]);
     let [knowShow, setKnowShow] = useState([])
-    let [selectedKnowShow, setSelectedKnowShow] = useState(null)
     let [assessmentKnowShow, setAssessmentKnowShow] = useState(null)
 
     const handleChange = (e) => {
-        let obj = items.find(item => item.id == e.target.value)
-        setStandard(obj)
-        let newKnowShows = knowShow.filter(item => item.standard == e.target.value)
-        setSelectedKnowShow(newKnowShows)
+        console.log(e.target.value)
     }
 
     const handleKSClick = (e) => {
-        setAssessmentKnowShow(e.target.value)
+        setKnowShowRequired(knowShow.find(chart => (chart.id === parseInt(e.target.value))))
     }
 
     useEffect(() => {
-        fetch("http://127.0.0.1:8000/api/knowshowchart")
+        fetch("/knowshowchart/")
             .then(res => res.json())
             .then(
                 (result) => {
+
                     setKnowShow(result);
                 },
                 // Note: it's important to handle errors here
@@ -35,17 +33,17 @@ function CreateAssessment(props) {
             )
     }, [])
 
-
     return (
         <div>
-            <CreateAssessmentProvider>
-                <StandardSelector standard={standard} setStandard={setStandard} handleChange={handleChange} items={items} setItems={setItems}/>
-                {selectedKnowShow ? selectedKnowShow.map(chart =>
-                    <button value={chart.id} onClick={handleKSClick} key={chart.id}>
-                        Chart created by {chart.author} on {chart.created}
-                    </button>) : <p></p>}
-                {assessmentKnowShow && <p>Create an assessment for KSC{assessmentKnowShow}</p>}
-            </CreateAssessmentProvider>
+                <StandardSelector />
+                {knowShow.map(chart => (
+                    (chart.standard === selectedStandard.id &&
+                        <button value={chart.id} onClick={handleKSClick} key={chart.id}>
+                            Chart created by {chart.author} on {chart.created}
+                        </button>)))}
+                {knowShowRequired && <p>Create an assessment for KSC{knowShowRequired.content.know.map(item => (
+                    <li>{item}</li>))}{knowShowRequired.content.show.map(item => (
+                    <li>{item}</li>))}</p>}
         </div>
     );
 }

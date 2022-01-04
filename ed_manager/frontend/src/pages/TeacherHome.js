@@ -9,7 +9,7 @@ function TeacherHome(props) {
     // this useEffect will run once
     // similar to componentDidMount()
     useEffect(() => {
-        fetch("http://127.0.0.1:8000/api/standard")
+        fetch("/standard/")
             .then(res => res.json())
             .then(
                 (result) => {
@@ -31,7 +31,6 @@ function TeacherHome(props) {
     } else if (!isLoaded) {
         return <div>Loading...</div>;
     } else {
-        console.log(items)
         return (
             <ul className={'standard-list'}>
                 {items.map(item => (
