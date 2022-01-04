@@ -1,14 +1,8 @@
 import React, {useEffect, useState} from 'react';
 
-function StandardSelector({ standard, setStandard }) {
+function StandardSelector({ standard, setStandard, handleChange, items, setItems }) {
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
-    const [items, setItems] = useState([]);
-
-    const handleChange = (e) => {
-        let obj = items.find(item => item.id == e.target.value)
-        setStandard(obj)
-    }
 
         // Note: the empty deps array [] means
         // this useEffect will run once
@@ -47,4 +41,4 @@ function StandardSelector({ standard, setStandard }) {
         }
     }
 
-    export default StandardSelector;
+export default StandardSelector;

@@ -1,6 +1,6 @@
 import React from 'react';
 
-function TextField({id, catIndex, fields, setFieldValues, value, type}) {
+function TextField({id, title, fields, setFieldValues, value, type}) {
     const handleTooLong = (e) => {
         const target = e.target;
         target.style.height= "30px"
@@ -8,8 +8,7 @@ function TextField({id, catIndex, fields, setFieldValues, value, type}) {
     }
 
     const handleChange = (e, id) => {
-        fields[catIndex].content[`${type}${id}`] = e.target.value;
-        setFieldValues(fields)
+        fields[title][id] = e.target.value;
     }
 
     return (

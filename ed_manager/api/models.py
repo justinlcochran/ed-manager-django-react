@@ -33,6 +33,7 @@ class KnowShowChart(models.Model):
     standard = models.ForeignKey(Standard, on_delete=models.CASCADE)
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     created = models.DateField(auto_now_add=True)
+    author = models.CharField(max_length=200, default='Justin')
 
     # def get_assessments(self):
     #     return self.assessment_set.all()

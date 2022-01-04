@@ -43,25 +43,21 @@ class KnowShowChartView(generics.ListAPIView):
 
 def createKnowShow(request):
     if request.method == "POST":
-        body_unicode = request.body.decode('utf-8')
-        body = json.loads(body_unicode)
-        knowObj = [obj for obj in body if 'type' in obj and obj['type'] == 'know']
-        knowList = [knowObj[0]['content'][f'{val}'] for val in knowObj[0]['content']]
-        showObj = [obj for obj in body if 'type' in obj and obj['type'] == 'show']
-        showList = [showObj[0]['content'][f'{val}'] for val in showObj[0]['content']]
-        scaffObj = [obj for obj in body if 'type' in obj and obj['type'] == 'scaffold']
-        scaffList = [scaffObj[0]['content'][f'{val}'] for val in scaffObj[0]['content']]
+        body = json.loads(request.body.decode('utf-8'))
+        keys = ['know', 'show', 'scaffold']
+        know, show, scaffold = [list(body['fields'][x].values()) for x in keys]
         content = {
-            'know': knowList,
-            'show': showList,
-            'scaffold': scaffList,
+            'know': know,
+            'show': show,
+            'scaffold': scaffold,
         }
-        standard = Standard.objects.get(id=[obj['id'] for obj in body if 'code' in obj][0])
-        creator = User.objects.get(id=[obj['user_id'] for obj in body if 'name' in obj][0])
+        standard = Standard.objects.get(id=body['standard']['id'])
+        creator = User.objects.get(id=body['user']['user_id'])
         newKnowShow = KnowShowChart(
             standard=standard,
             content=content,
-            creator=creator
+            creator=creator,
+            author=creator.first_name,
         )
         newKnowShow.save()
 

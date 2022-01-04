@@ -188,3 +188,7 @@ td {
 .text-box {
   height: 34px;
 }
+
+.title {
+  text-transform: capitalize;
+}
