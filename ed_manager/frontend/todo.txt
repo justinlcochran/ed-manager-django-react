@@ -1,0 +1,11 @@
+Flexible mode or Strict mode (can be set by admin??) ((Starting with strict mode only))
+
+Render a question input field:
+
+Know-Show on the left (checkbox for flexible, Selected chronologically for strict), Question box and Answer boxes below (autocheck radio1??)
+
+Submit button with onClick: Save completed question to state [{}], this will update the rendered but invisible map of question drafts (edit button?), then create a new question field below, tick up question number
+
+When all knowRequired in knowSatisfied, contextual SUBMIT ASSESSMENT button appears ({knowShowRequired == knowShowSatisfied && Submit Button})
+
+Actual submit, backend receives objects as array of question objects containing answer objects. Unpack each, instantiate in backend, then display "What's next?" links
