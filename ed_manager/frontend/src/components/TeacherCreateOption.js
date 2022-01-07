@@ -8,17 +8,13 @@ TeacherCreateOption.propTypes = {
 };
 
 function TeacherCreateOption({ name, img_source }) {
-    const style = {
-        backgroundImage: `url(${img_source})`,
-    }
     return (
-            <td>
-                    <Link to={ name }>
-                        <button className={'button-label'} style={style}>
-                        </button>
-                    </Link>
-            </td>
-
+        <Link to={name} >
+            <button
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 border border-gray-400 rounded-2xl shadow">
+                <img src={img_source} className="h-50 w-50"/>
+            </button>
+        </Link>
     );
 }
 

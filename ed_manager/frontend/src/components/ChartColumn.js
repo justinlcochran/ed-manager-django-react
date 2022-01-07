@@ -12,20 +12,21 @@ function ChartColumn({title, popUpText, setFieldValues, fields}) {
     }
 
     return (
-        <td className={"top-td"}>
+        <div>
             <div>
                 <div className={`popup`} onClick={() => setPopState(!popState)}>
-                    <h1 className={'title'}>{title}</h1>
+                    <p className={"capitalize text-2xl font-bold font-sans "}>{title}</p>
                     <span className={`popuptext ${popState ? "show" : ""}`}>{popUpText}</span>
                 </div>
                 {textAreas.map(item => (
                     <TextField type={item.colType} value={item.placeholder} key={item.textAreaId} id={item.textAreaId} title={title} fields={fields} setFieldValues={setFieldValues} />
                 ))}
-                <button className="center block add-button" type={"button"} onClick={() => handleAdd()} name={title}>+
+                <button className="inline-flex bg-lime-600 max-w-max rounded font-bold px-2 hover:bg-lime-700" type={"button"} onClick={() => handleAdd()} name={title}>
+                    <img src="https://ucarecdn.com/fba38ac8-7b37-4a34-abcc-afca5c76c53d/Untitleddesign.png" className={"h-5 w-5 p-1 justify-center"}/>
                 </button>
 
             </div>
-        </td>
+        </div>
     );
 }
 

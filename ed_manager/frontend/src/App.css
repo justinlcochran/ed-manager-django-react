@@ -3,6 +3,13 @@ body {
   background: #282c34;
 }
 
+textarea {
+  color: black;
+  height: 50px;
+  resize: none;
+  @apply px-2;
+  @apply rounded;
+}
 .App {
   text-align: center;
 }

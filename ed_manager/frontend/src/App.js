@@ -3,7 +3,7 @@ import './App.css';
 import NavBar from './components/NavBar';
 import TeacherHome from './pages/TeacherHome';
 import TeacherCreate from './pages/TeacherCreate';
-import KnowShowCreate from "./pages/KnowShowCreate";
+import CreateKnowShow from "./pages/CreateKnowShow";
 import {AuthProvider} from "./context/AuthContext";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
@@ -24,7 +24,7 @@ function App() {
               <Route path='/create' element={<TeacherCreate />} />
                   <Route path='/create/knowShowChart' element={
                     <StandardContextProvider>
-                      <KnowShowCreate />
+                      <CreateKnowShow />
                     </StandardContextProvider>} />
                   <Route path='/create/assessment' element={
                     <StandardContextProvider>

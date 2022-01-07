@@ -11,7 +11,7 @@ export const CreateAssessmentProvider = ({children}) => {
         title: null,
     })
     const [standard, setStandard] = useState({id: null, code: null, text:'Choose a Standard', subject:null})
-    const [knowShowRequired, setKnowShowRequired] = useState(null)
+    const [knowShowRequired, setKnowShowRequired] = useState({id: null, content: {know: [], show: []}})
     const [knowShowSatisfied, setKnowShowSatisfied] = useState(null)
     const [questionObj, setQuestionObj] = useState(null)
 

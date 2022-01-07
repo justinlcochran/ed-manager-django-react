@@ -15,7 +15,7 @@ function StandardSelector(props) {
     } else {
         return (
             <>
-                <select defaultValue={'1'} onChange={e => handleChange(e)} id="standardsDropDown"
+                <select className={"text-gray-600"} defaultValue={'1'} onChange={e => handleChange(e)} id="standardsDropDown"
                         name="standardsDropDown">
                     <option disabled value="1">Select a Standard</option>
                     {allStandards.map(item => <option key={item.code} value={item.id}>{item.code}</option>)}

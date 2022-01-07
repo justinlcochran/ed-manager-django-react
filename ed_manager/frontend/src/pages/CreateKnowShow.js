@@ -4,7 +4,7 @@ import StandardSelector from "../components/StandardSelector";
 import AuthContext from "../context/AuthContext";
 import StandardContext from "../context/StandardContext";
 
-function KnowShowCreate(props) {
+function CreateKnowShow(props) {
     let {user} = useContext(AuthContext)
     let {selectedStandard} = useContext(StandardContext)
 
@@ -14,17 +14,21 @@ function KnowShowCreate(props) {
     );
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
-        const serverURL = '/createknowshow/'
-        const response = await fetch(serverURL, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({fields: fieldsValues, standard: selectedStandard, user: user})
-        });
-        const data = await response;
-        return data
+        if (window.confirm('Are you sure your Know Show Chart is complete?')) {
+            const serverURL = '/createknowshow/'
+            const response = await fetch(serverURL, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({fields: fieldsValues, standard: selectedStandard, user: user})
+            });
+            const data = await response;
+            return data
+        } else {
+            e.preventDefault()
+            return false
+        }
     }
 
     const knowText = 'Know entries should be full sentences representing the information students should learn and retain through the course of learning this standard.'
@@ -35,19 +39,17 @@ function KnowShowCreate(props) {
         <div>
             <form onSubmit={handleSubmit}>
                 <StandardSelector />
-                <table className={'center'}>
-                    <tbody>
-                    <tr>
+                <div className={'flex gap-5 justify-center'}>
                         <ChartColumn title={'know'} popUpText={knowText} setFieldValues={setFieldsValues} fields={fieldsValues} />
                         <ChartColumn title={'show'} popUpText={showText} setFieldValues={setFieldsValues} fields={fieldsValues} />
                         <ChartColumn title={'scaffold'} popUpText={scaffText} setFieldValues={setFieldsValues} fields={fieldsValues} />
-                    </tr>
-                    </tbody>
-                </table>
-                <input type={'submit'}/>
+                </div>
+                <button className={"bg-red-500 hover:bg-gray-400 p-2 rounded"}>
+                    <input className={"text-2xl"} type={'submit'}/>
+                </button>
             </form>
         </div>
     );
 }
 
-export default KnowShowCreate;
+export default CreateKnowShow;

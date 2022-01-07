@@ -7,7 +7,7 @@ function NavBar(props) {
     let {user, logoutUser} = useContext(AuthContext)
     return (
         <div>
-            {user && <h3>Hello {user.name}</h3>}
+            {user && <p className={"text-2xl m-2"}>Hello {user.name}</p>}
             <ul className={'nav-list'}>
                 <NavButton name={'/'} title={'Home'}/>
                 <NavButton name={'/create'} title={'Create'}/>

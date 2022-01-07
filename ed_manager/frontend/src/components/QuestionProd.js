@@ -4,7 +4,7 @@ function QuestionProd(props) {
 
 
     return (
-        <div>
+        <div className="text-2xl">
 
         </div>
     );

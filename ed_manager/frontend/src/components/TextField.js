@@ -13,7 +13,7 @@ function TextField({id, title, fields, setFieldValues, value, type}) {
 
     return (
         <div>
-            <textarea className={'text-box'} id={id} placeholder={value} onChange={e => handleChange(e, id)} onKeyDown={handleTooLong} />
+            <textarea className={'text-box font-sans'} id={id} placeholder={value} onChange={e => handleChange(e, id)} onKeyDown={handleTooLong} />
         </div>
     );
 }
