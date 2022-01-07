@@ -40,9 +40,9 @@ function CreateKnowShow(props) {
             <form onSubmit={handleSubmit}>
                 <StandardSelector />
                 <div className={'flex gap-5 justify-center'}>
-                        <ChartColumn title={'know'} popUpText={knowText} setFieldValues={setFieldsValues} fields={fieldsValues} />
-                        <ChartColumn title={'show'} popUpText={showText} setFieldValues={setFieldsValues} fields={fieldsValues} />
-                        <ChartColumn title={'scaffold'} popUpText={scaffText} setFieldValues={setFieldsValues} fields={fieldsValues} />
+                        <ChartColumn title={'know'} popUpText={knowText} setFieldValues={setFieldsValues} fields={fieldsValues} placeholder={"Type Here ..."}/>
+                        <ChartColumn title={'show'} popUpText={showText} setFieldValues={setFieldsValues} fields={fieldsValues} placeholder={"I can ..."}/>
+                        <ChartColumn title={'scaffold'} popUpText={scaffText} setFieldValues={setFieldsValues} fields={fieldsValues} placeholder={"Students may need support with ..."}/>
                 </div>
                 <button className={"bg-red-500 hover:bg-gray-400 p-2 rounded"}>
                     <input className={"text-2xl"} type={'submit'}/>

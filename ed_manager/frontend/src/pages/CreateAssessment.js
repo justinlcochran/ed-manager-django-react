@@ -1,23 +1,24 @@
 import React, {useContext, useEffect, useState} from 'react';
 import StandardSelector from "../components/StandardSelector";
-import CreateAssessmentContext, {CreateAssessmentProvider} from "../context/CreateAssessmentContext";
+import CreateAssessmentContext from "../context/CreateAssessmentContext";
 import StandardContext from "../context/StandardContext";
 import KnowShowButton from "../components/KnowShowButton";
+import AssessmentQuestion from "../components/AssessmentQuestion";
+import StudentQuestionPreview from "../components/StudentQuestionPreview";
 
-function CreateAssessment(props) {
-    let {knowShowRequired, setKnowShowRequired} = useContext(CreateAssessmentContext)
+function CreateAssessment() {
+    let {knowShowRequired, setKnowShowRequired, knowShowSatisfied} = useContext(CreateAssessmentContext)
     let {selectedStandard} = useContext(StandardContext)
-    let [items, setItems] = useState([]);
     let [knowShow, setKnowShow] = useState([])
-    let [assessmentKnowShow, setAssessmentKnowShow] = useState(null)
 
-    const handleChange = (e) => {
-        console.log(e.target.value)
-    }
+    useEffect(()=> {
+        if (!(selectedStandard.id == null) && !(selectedStandard.id === knowShowRequired.standard) && !(knowShowRequired.standard == null)) {
+            setKnowShowRequired({id: null, content: {know: [], show: []}, standard: null})
+        } else {
+            return null
+        }
+    })
 
-    const handleKSClick = (e) => {
-        setKnowShowRequired(knowShow.find(chart => (chart.id === parseInt(e.target.value))))
-    }
 
     useEffect(() => {
         fetch("/knowshowchart/")
@@ -39,15 +40,17 @@ function CreateAssessment(props) {
                 <StandardSelector />
                 {knowShow.map(chart => (
                     (chart.standard === selectedStandard.id &&
-                        <KnowShowButton key={chart.id} chart={chart} onClick={handleKSClick}/>
+                        <KnowShowButton key={chart.id} chart={chart} />
                     )))}
-
-                {/*//     <button value={chart.id} onClick={handleKSClick} key={chart.id}>*/}
-                {/*//             Chart created by {chart.author} on {chart.created}*/}
-                {/*//         </button>)))}*/}
-                {/*// {knowShowRequired && <p>Create an assessment for KSC{knowShowRequired.content.know.map(item => (*/}
-                {/*//     <li>{item}</li>))}{knowShowRequired.content.show.map(item => (*/}
-                {/*//     <li>{item}</li>))}</p>}*/}
+            <div className="grid sm:grid-cols-1 xl:grid-cols-2">
+            {knowShowRequired.content.know.map(item => (
+                    (knowShowSatisfied.includes(item))
+                        ? <StudentQuestionPreview key={item} ksText={item}/>
+                        : <AssessmentQuestion key={item} ksText={item} />
+                ))
+            }
+            {knowShowRequired.content.show.map(item => (<AssessmentQuestion key={item} ksText={item}/>))}
+            </div>
         </div>
     );
 }

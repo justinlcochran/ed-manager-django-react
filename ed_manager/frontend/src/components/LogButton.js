@@ -1,13 +1,13 @@
 import React, {useContext} from 'react';
-import {Link, useLocation} from "react-router-dom";
+import {Link} from "react-router-dom";
 import AuthContext from "../context/AuthContext";
 
-function LogButton(props) {
+function LogButton() {
     let {user, logoutUser} = useContext(AuthContext)
     return (
         <li className={'nav-li'}>
             {user? (
-                <p className={'nav-link nav-p'} onClick={logoutUser}>Logout</p>
+                <p className={'nav-link nav-p text-2xl'} onClick={logoutUser}>Logout</p>
                 ):(
                 <Link to={'/login'} className={'nav-link'}>Login</Link>
             )}
