@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import TextField from './TextField';
 
-function ChartColumn({title, popUpText, setFieldValues, fields}) {
+function ChartColumn({title, popUpText, setFieldValues, fields, placeholder}) {
     const [popState, setPopState] = useState(false);
     const [textAreas, setTextAreas] = useState(
-        [{colType: title, textAreaId: 0, placeholder: 'Type Here...'}]
+        [{colType: title, textAreaId: 0, placeholder: `${placeholder}`}]
     )
     const handleAdd = () => {
         let newTextArea = [...textAreas, {colType:title, textAreaId: textAreas[textAreas.length-1].textAreaId+1, placeholder: 'Type Here...'}]

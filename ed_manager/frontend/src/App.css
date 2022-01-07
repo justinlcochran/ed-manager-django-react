@@ -5,10 +5,7 @@ body {
 
 textarea {
   color: black;
-  height: 50px;
   resize: none;
-  @apply px-2;
-  @apply rounded;
 }
 .App {
   text-align: center;
@@ -150,7 +147,7 @@ td {
   padding: 8px 8px;
   position: absolute;
   z-index: 1;
-  bottom: 50%;
+  bottom: 125%;
   left: 50%;
   margin-left: -225px;
   opacity: 90%;

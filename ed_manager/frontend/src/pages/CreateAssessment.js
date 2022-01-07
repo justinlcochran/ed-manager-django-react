@@ -41,13 +41,6 @@ function CreateAssessment(props) {
                     (chart.standard === selectedStandard.id &&
                         <KnowShowButton key={chart.id} chart={chart} onClick={handleKSClick}/>
                     )))}
-
-                {/*//     <button value={chart.id} onClick={handleKSClick} key={chart.id}>*/}
-                {/*//             Chart created by {chart.author} on {chart.created}*/}
-                {/*//         </button>)))}*/}
-                {/*// {knowShowRequired && <p>Create an assessment for KSC{knowShowRequired.content.know.map(item => (*/}
-                {/*//     <li>{item}</li>))}{knowShowRequired.content.show.map(item => (*/}
-                {/*//     <li>{item}</li>))}</p>}*/}
         </div>
     );
 }
