@@ -42,7 +42,7 @@ function CreateAssessment() {
                     (chart.standard === selectedStandard.id &&
                         <KnowShowButton key={chart.id} chart={chart} />
                     )))}
-            <div className="grid sm:grid-cols-1 xl:grid-cols-2">
+            <div className="grid sm:grid-cols-1 lg:grid-cols-2">
             {knowShowRequired.content.know.map(item => (
                     (knowShowSatisfied.includes(item))
                         ? <StudentQuestionPreview key={item} ksText={item}/>
