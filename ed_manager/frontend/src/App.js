@@ -10,6 +10,7 @@ import LoginPage from "./pages/LoginPage";
 import CreateAssessment from "./pages/CreateAssessment";
 import {CreateAssessmentProvider} from "./context/CreateAssessmentContext";
 import StandardContext, {StandardContextProvider} from "./context/StandardContext";
+import ViewAssessment from "./pages/ViewAssessment";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
                         <CreateAssessment/>
                       </CreateAssessmentProvider>
                     </StandardContextProvider>} />
+              <Route path='/viewassessment' element={<ViewAssessment />} />
             </Routes>
         </AuthProvider>
       </BrowserRouter>

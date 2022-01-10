@@ -5,9 +5,11 @@ import StandardContext from "../context/StandardContext";
 import KnowShowButton from "../components/KnowShowButton";
 import AssessmentQuestion from "../components/AssessmentQuestion";
 import StudentQuestionPreview from "../components/StudentQuestionPreview";
+import AuthContext from "../context/AuthContext";
 
 function CreateAssessment() {
-    let {knowShowRequired, setKnowShowRequired, knowShowSatisfied} = useContext(CreateAssessmentContext)
+    let {user} = useContext(AuthContext)
+    let {knowShowRequired, setKnowShowRequired, knowShowSatisfied, questionObjList} = useContext(CreateAssessmentContext)
     let {selectedStandard} = useContext(StandardContext)
     let [knowShow, setKnowShow] = useState([])
 
@@ -18,6 +20,24 @@ function CreateAssessment() {
             return null
         }
     })
+
+    const handlePost = async (e) => {
+        if (window.confirm('Are you sure your Assessment is complete?')) {
+            const serverURL = '/createassessment/'
+            const response = await fetch(serverURL, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({questions: questionObjList, user: user, knowShow: knowShowRequired})
+            });
+            const data = await response;
+            return data
+        } else {
+            e.preventDefault()
+            return false
+        }
+    }
 
 
     useEffect(() => {
@@ -49,8 +69,16 @@ function CreateAssessment() {
                         : <AssessmentQuestion key={item} ksText={item} />
                 ))
             }
-            {knowShowRequired.content.show.map(item => (<AssessmentQuestion key={item} ksText={item}/>))}
+            {knowShowRequired.content.show.map(item => (
+                (knowShowSatisfied.includes(item))
+                    ? <StudentQuestionPreview key={item} ksText={item}/>
+                    : <AssessmentQuestion key={item} ksText={item} />
+            ))
+            }
             </div>
+            {(knowShowRequired.id) && (knowShowRequired.content.know.every(item => (knowShowSatisfied.includes(item)))) && (knowShowRequired.content.show.every(item => (knowShowSatisfied.includes(item)))) &&
+                <button onClick={handlePost} className={"p-2 bg-gray-400 rounded mb-4"}>They're all in there!</button>
+            }
         </div>
     );
 }

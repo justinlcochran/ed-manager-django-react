@@ -40,3 +40,40 @@ class KnowShowChart(models.Model):
 
     def __str__(self):
         return f'{self.standard} created by {self.creator} on {self.created}'
+
+
+class Assessment(models.Model):
+    know_show_chart = models.ForeignKey(KnowShowChart, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    created = models.DateField(auto_now_add=True)
+
+    def get_standard(self):
+        return self.know_show_chart.standard
+
+    def get_questions(self):
+        return self.question_set.all()
+
+
+class Question(models.Model):
+    assessment = models.ForeignKey(Assessment, on_delete=models.CASCADE)
+    satisfied = models.CharField(max_length=400)
+    text = models.CharField(max_length=200)
+    created = models.DateField(auto_now_add=True)
+
+    def get_standard(self):
+        return self.assessment.know_show_chart.standard
+
+    def get_answers(self):
+        return self.answer_set.all()
+
+    def __str__(self):
+        return self.text
+
+
+class Answer(models.Model):
+    text = models.CharField(max_length=200)
+    correct = models.BooleanField(default=False)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"question: {self.question}, answer: {self.text}, correct: {self.correct}"

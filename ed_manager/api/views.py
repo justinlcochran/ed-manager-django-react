@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from django.views.decorators.csrf import ensure_csrf_cookie
 from rest_framework import generics
-from .serializers import UserSerializer, StandardSerializer, KnowShowChartSerializer
-from .models import User, Standard, KnowShowChart
-from django.http import HttpResponse
+from .serializers import UserSerializer, StandardSerializer, KnowShowChartSerializer, AssessmentSerializer
+from .models import User, Standard, KnowShowChart, Assessment, Question, Answer
+from django.http import HttpResponse, JsonResponse
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 import json
@@ -41,6 +41,11 @@ class KnowShowChartView(generics.ListAPIView):
     serializer_class = KnowShowChartSerializer
 
 
+class AssessmentView(generics.ListAPIView):
+    queryset = Assessment.objects.all()
+    serializer_class = AssessmentSerializer
+
+
 def createKnowShow(request):
     if request.method == "POST":
         body = json.loads(request.body.decode('utf-8'))
@@ -62,3 +67,43 @@ def createKnowShow(request):
         newKnowShow.save()
 
     return HttpResponse(status=201)
+
+
+def createAssessment(request):
+    if request.method == "POST":
+        body = json.loads(request.body.decode('utf-8'))
+        newAssessment = Assessment(
+            know_show_chart=KnowShowChart.objects.get(id=body['knowShow']['id']),
+            author=User.objects.get(id=body['user']['user_id'])
+        )
+        newAssessment.save()
+        for questionObj in body['questions']:
+            newQuestion = Question(
+                assessment=newAssessment,
+                text=questionObj['question'],
+                satisfied=questionObj['ks'],
+            )
+            newQuestion.save()
+            for answer in questionObj['answers']:
+                newAnswer = Answer(
+                    text=answer['text'],
+                    correct=answer['correct'],
+                    question=newQuestion
+                )
+                newAnswer.save()
+
+    return HttpResponse(status=201)
+
+
+def getAssessment(request):
+    questionList = Assessment.objects.get(id=1).get_questions()
+    know = Assessment.objects.get(id=1).know_show_chart.content['know']
+    show = Assessment.objects.get(id=1).know_show_chart.content['show']
+    questionObjList = [{'question': question.text, 'answers': [{'correct': answer.correct, 'text': answer.text} for answer in question.get_answers()], 'ks': question.satisfied} for question in questionList]
+    context = {
+        'know': know,
+        'show': show,
+        'questions': questionObjList
+    }
+    data = json.dumps(context)
+    return JsonResponse(data, safe=False)
