@@ -1,4 +1,4 @@
-import logo from './logo.svg';
+
 import './App.css';
 import NavBar from './components/NavBar';
 import TeacherHome from './pages/TeacherHome';
@@ -9,7 +9,7 @@ import {BrowserRouter, Route, Routes} from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import CreateAssessment from "./pages/CreateAssessment";
 import {CreateAssessmentProvider} from "./context/CreateAssessmentContext";
-import StandardContext, {StandardContextProvider} from "./context/StandardContext";
+import {StandardContextProvider} from "./context/StandardContext";
 import ViewAssessment from "./pages/ViewAssessment";
 
 function App() {

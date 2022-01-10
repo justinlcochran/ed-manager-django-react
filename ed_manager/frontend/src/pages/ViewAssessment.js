@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import QuestionInterface from "../components/QuestionInterface";
 
-function ViewAssessment(props) {
+function ViewAssessment() {
     const [assessmentData, setAssessmentData] = useState(null)
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
