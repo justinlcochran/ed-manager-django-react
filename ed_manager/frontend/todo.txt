@@ -1,5 +1,9 @@
 Flexible mode or Strict mode (can be set by admin??) ((Starting with strict mode only))
 
-When all knowRequired in knowSatisfied, contextual SUBMIT ASSESSMENT button appears ({knowShowRequired == knowShowSatisfied && Submit Button})
+Enrollment Create Workflow:
+    Content Dropdown
+    StandardSet Dropdown
 
-Actual submit, backend receives objects as array of question objects containing answer objects. Unpack each, instantiate in backend, then display "What's next?" links
+    Choose Standards Set (Foreign Key Standard Magnet) Grade Levels? (Autochoose if length 1, filter standard sets by content and grade
+    Write Title
+    Invite Code? or Filter Inv List
