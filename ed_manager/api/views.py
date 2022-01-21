@@ -114,8 +114,6 @@ def getAssessment(request):
     return JsonResponse(data, safe=False)
 
 
-
-
 def createEnrollment(request):
     return HttpResponse(status=201)
 

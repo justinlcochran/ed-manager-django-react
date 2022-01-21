@@ -12,16 +12,13 @@ function CreateEnrollment() {
     let fakeStandardSets = [{title: 'CCSS Algebra 1', grade: 9}, {title: 'CCSS English 9', grade: 9}]
 
     useEffect(() => {
-        fetch("/standardset/")
+        fetch("http://127.0.0.1:8000/api/standardset/")
             .then(res => res.json())
             .then(
                 (result) => {
                     setIsLoaded(true);
                     setStandardSets(result);
                 },
-                // Note: it's important to handle errors here
-                // instead of a catch() block so that we don't swallow
-                // exceptions from actual bugs in components.
                 (error) => {
                     setIsLoaded(true);
                     setError(error);
@@ -65,7 +62,7 @@ function CreateEnrollment() {
                             onChange={handleStandardSetSelect} id="topicsDropDown"
                             name="topicsDropDown">
                         <option disabled value="1">Select a Standard Set</option>
-                        {standardSets.map(item => <option key={item.title}
+                        {(standardSets) && standardSets.map(item => <option key={item.title}
                                                           value={item.title}>{`${item.grade} | ${item.title}`}</option>)}
                     </select>
 

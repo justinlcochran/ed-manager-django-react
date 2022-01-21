@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Standard, KnowShowChart, Assessment
+from .models import User, Standard, KnowShowChart, Assessment, StandardSet
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -28,5 +28,5 @@ class AssessmentSerializer(serializers.ModelSerializer):
 
 class StandardSetSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Assessment
+        model = StandardSet
         fields = '__all__'
