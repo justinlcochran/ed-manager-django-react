@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.views.decorators.csrf import ensure_csrf_cookie
 from rest_framework import generics
-from .serializers import UserSerializer, StandardSerializer, KnowShowChartSerializer, AssessmentSerializer
-from .models import User, Standard, KnowShowChart, Assessment, Question, Answer
+from .serializers import UserSerializer, StandardSerializer, KnowShowChartSerializer, AssessmentSerializer, StandardSetSerializer
+from .models import User, Standard, KnowShowChart, Assessment, Question, Answer, StandardSet
 from django.http import HttpResponse, JsonResponse
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -44,6 +44,11 @@ class KnowShowChartView(generics.ListAPIView):
 class AssessmentView(generics.ListAPIView):
     queryset = Assessment.objects.all()
     serializer_class = AssessmentSerializer
+
+
+class StandardSetView(generics.ListAPIView):
+    queryset = StandardSet.objects.all()
+    serializer_class = StandardSetSerializer
 
 
 def createKnowShow(request):
@@ -107,3 +112,11 @@ def getAssessment(request):
     }
     data = json.dumps(context)
     return JsonResponse(data, safe=False)
+
+
+
+
+def createEnrollment(request):
+    return HttpResponse(status=201)
+
+

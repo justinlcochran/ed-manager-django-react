@@ -3,6 +3,43 @@ from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 
 
+class StandardSet(models.Model):
+    title = models.CharField(max_length=200)
+    subject = models.CharField(max_length=20, choices=(("Math", "Math"),
+                                                       ("Science", "Science"),
+                                                       ("English", "English"),
+                                                       ("Social Studies", "Social Studies"),
+                                                       ("Elective", "Elective"),
+                                                       ))
+    grade = models.IntegerField()
+
+    def get_standards(self):
+        return self.standard_set.all()
+
+    def __str__(self):
+        return self.title
+
+
+class Standard(models.Model):
+    code = models.CharField(max_length=200)
+    text = models.CharField(max_length=200)
+    standardSet = models.ForeignKey(StandardSet, on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return self.code
+
+
+class Enrollment(models.Model):
+    title = models.CharField(max_length=200)
+    subject = models.CharField(max_length=20, choices=(("Math", "Math"),
+                                                       ("Science", "Science"),
+                                                       ("English", "English"),
+                                                       ("Social Studies", "Social Studies"),
+                                                       ("Elective", "Elective"),
+                                                       ))
+    standardSet = models.ForeignKey(StandardSet, on_delete=models.CASCADE, null=True)
+
+
 class User(AbstractUser):
     role = models.CharField(
         max_length=20,
@@ -12,20 +49,7 @@ class User(AbstractUser):
             ("Student", "Student"),
         )
     )
-
-
-class Standard(models.Model):
-    code = models.CharField(max_length=200)
-    text = models.CharField(max_length=200)
-    subject = models.CharField(max_length=20, choices=(("Math", "Math"),
-                                                       ("Science", "Science"),
-                                                       ("English", "English"),
-                                                       ("Social Studies", "Social Studies"),
-                                                       ("Elective", "Elective"),
-                                                       ))
-
-    def __str__(self):
-        return self.code
+    enrollments = models.ManyToManyField(Enrollment, blank=True)
 
 
 class KnowShowChart(models.Model):
@@ -77,3 +101,4 @@ class Answer(models.Model):
 
     def __str__(self):
         return f"question: {self.question}, answer: {self.text}, correct: {self.correct}"
+

@@ -9,7 +9,7 @@ function LogButton() {
             {user? (
                 <p className={'nav-link nav-p text-2xl'} onClick={logoutUser}>Logout</p>
                 ):(
-                <Link to={'/login'} className={'nav-link'}>Login</Link>
+                <Link to={'/login'} className={'nav-link text-2xl'}>Login</Link>
             )}
         </li>
     );
