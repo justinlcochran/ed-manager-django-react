@@ -1,15 +1,18 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
+import AuthContext from "../context/AuthContext";
+import {Link} from "react-router-dom";
 
 function TeacherHome(props) {
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [items, setItems] = useState([]);
 
+    let user = useContext(AuthContext)
     // Note: the empty deps array [] means
     // this useEffect will run once
     // similar to componentDidMount()
     useEffect(() => {
-        fetch("/standard/")
+        fetch(`/teacherdashboard/${user.user.user_id}`)
             .then(res => res.json())
             .then(
                 (result) => {
@@ -32,13 +35,19 @@ function TeacherHome(props) {
         return <div>Loading...</div>;
     } else {
         return (
-            <ul className={'standard-list'}>
+            <div>
+                <p className={"my-4 mx-4 text-3xl font-bold text-gray-200"}>My Enrollments:</p>
+            <div className={'grid grid-cols-4'}>
                 {items.map(item => (
-                    <li key={item.id}>
-                        {item.code}: {item.text} ({item.subject})
-                    </li>
+                    <Link to={`/enrollmentdash/${item.id}`} key={`${item.id}`}> <div className={"col-span-1 bg-blue-300 hover:bg-blue-500 rounded-2xl py-5 mt-4 mx-4"} id={"anim-div"}>
+                        {(item.title) && <p className={"my-4 mx-4 text-3xl font-bold text-gray-700"}>{item.title}</p>}
+                    </div></Link>
+                    // <li key={item.id}>
+                    //     {item.title}: {item.subject}
+                    // </li>
                 ))}
-            </ul>
+            </div>
+            </div>
         );
     }
 }

@@ -29,17 +29,6 @@ class Standard(models.Model):
         return self.code
 
 
-class Enrollment(models.Model):
-    title = models.CharField(max_length=200)
-    subject = models.CharField(max_length=20, choices=(("Math", "Math"),
-                                                       ("Science", "Science"),
-                                                       ("English", "English"),
-                                                       ("Social Studies", "Social Studies"),
-                                                       ("Elective", "Elective"),
-                                                       ))
-    standardSet = models.ForeignKey(StandardSet, on_delete=models.CASCADE, null=True)
-
-
 class User(AbstractUser):
     role = models.CharField(
         max_length=20,
@@ -49,7 +38,19 @@ class User(AbstractUser):
             ("Student", "Student"),
         )
     )
-    enrollments = models.ManyToManyField(Enrollment, blank=True)
+
+
+class Enrollment(models.Model):
+    title = models.CharField(max_length=200)
+    subject = models.CharField(max_length=20, choices=(("Math", "Math"),
+                                                       ("Science", "Science"),
+                                                       ("English", "English"),
+                                                       ("Social Studies", "Social Studies"),
+                                                       ("Elective", "Elective"),
+                                                       ))
+    standardSet = models.ForeignKey(StandardSet, on_delete=models.CASCADE, null=True)
+    students = models.ManyToManyField(User, related_name='selectedStudents')
+    teachers = models.ManyToManyField(User, related_name='teacherCreator')
 
 
 class KnowShowChart(models.Model):

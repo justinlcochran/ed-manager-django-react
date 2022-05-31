@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.views.decorators.csrf import ensure_csrf_cookie
 from rest_framework import generics
-from .serializers import UserSerializer, StandardSerializer, KnowShowChartSerializer, AssessmentSerializer, StandardSetSerializer
-from .models import User, Standard, KnowShowChart, Assessment, Question, Answer, StandardSet
+from .serializers import UserSerializer, StandardSerializer, KnowShowChartSerializer, AssessmentSerializer, StandardSetSerializer, EnrollmentSerializer
+from .models import User, Standard, KnowShowChart, Assessment, Question, Answer, StandardSet, Enrollment
 from django.http import HttpResponse, JsonResponse
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -31,6 +31,11 @@ class UserView(generics.ListAPIView):
     serializer_class = UserSerializer
 
 
+class StudentList(generics.ListAPIView):
+    queryset = User.objects.filter(role="Student")
+    serializer_class = UserSerializer
+
+
 class StandardView(generics.ListAPIView):
     queryset = Standard.objects.all()
     serializer_class = StandardSerializer
@@ -49,6 +54,22 @@ class AssessmentView(generics.ListAPIView):
 class StandardSetView(generics.ListAPIView):
     queryset = StandardSet.objects.all()
     serializer_class = StandardSetSerializer
+
+
+class EnrollmentView(generics.ListAPIView):
+    serializer_class = EnrollmentSerializer
+
+    def get_queryset(self):
+        enrollment = self.kwargs['pk']
+        return Enrollment.objects.filter(id=enrollment)
+
+
+class EnrollmentForDashboardView(generics.ListAPIView):
+    serializer_class = EnrollmentSerializer
+
+    def get_queryset(self):
+        user = self.kwargs['pk']
+        return Enrollment.objects.filter(teachers__id=user)
 
 
 def createKnowShow(request):
@@ -70,6 +91,24 @@ def createKnowShow(request):
             author=creator.first_name,
         )
         newKnowShow.save()
+
+    return HttpResponse(status=201)
+
+
+def createEnrollment(request):
+
+    if request.method == "POST":
+        body = json.loads(request.body.decode('utf-8'))
+        print(body)
+        creator = User.objects.get(id=body['user']['user_id'])
+        newEnrollment = Enrollment(
+            title=body['title'],
+            subject=body['subject'],
+            standardSet=StandardSet.objects.get(id=body['standardSet']['id']),
+        )
+        newEnrollment.save()
+        newEnrollment.students.set([User.objects.get(id=x['id']) for x in body['students']])
+        newEnrollment.teachers.add(creator)
 
     return HttpResponse(status=201)
 
@@ -114,7 +153,13 @@ def getAssessment(request):
     return JsonResponse(data, safe=False)
 
 
-def createEnrollment(request):
-    return HttpResponse(status=201)
+def getTeacherDashboard(request, pk):
+    context = {
+        'enrollments': list(Enrollment.objects.filter(teachers__id=pk))
+    }
+    print(context, 'This is printing')
+    data = json.dumps(context)
+
+    return JsonResponse(data, safe=False)
 
 

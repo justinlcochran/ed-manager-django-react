@@ -15,6 +15,8 @@ import CreateEnrollment from "./pages/CreateEnrollment";
 import StudentNav from "./components/StudentNav";
 import StudentDash from "./pages/StudentDash";
 import RequireStaff from "./components/RequireStaff";
+import Assign from "./pages/Assign";
+import EnrollmentDash from "./pages/EnrollmentDash";
 
 function App() {
   return (
@@ -23,7 +25,7 @@ function App() {
         <AuthProvider>
             <Routes>
               <Route path='/login' element={<LoginPage />} />
-              <Route path='/' exact element={<><NavBar /> <TeacherHome /> </>} />
+              <Route path='/' exact element={<RequireStaff><NavBar /> <TeacherHome /> </RequireStaff>} />
               <Route path='/create' element={<RequireStaff><NavBar /> <TeacherCreate /> </RequireStaff>} />
               <Route path='/create/knowShowChart' element={
                 <StandardContextProvider>
@@ -35,9 +37,10 @@ function App() {
                     <NavBar /> <CreateAssessment/>
                   </CreateAssessmentProvider>
                 </StandardContextProvider>} />
+              <Route path='/assign' element={<Assign />} />
               <Route path='/viewassessment' element={<><NavBar /> <ViewAssessment /> </>} />
               <Route path='/create/enrollment' element={<><NavBar /> <CreateEnrollment /> </>} />
-
+              <Route path='/enrollmentdash/:enrollmentId' element={<><NavBar /> <EnrollmentDash /> </>} />
               <Route path='/student' element={<><StudentNav /><StudentDash /></>} />
 
           </Routes>
