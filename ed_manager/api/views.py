@@ -2,7 +2,8 @@ from django.shortcuts import render
 from django.views.decorators.csrf import ensure_csrf_cookie
 from rest_framework import generics
 from .serializers import UserSerializer, StandardSerializer, KnowShowChartSerializer, AssessmentSerializer, StandardSetSerializer, EnrollmentSerializer
-from .models import User, Standard, KnowShowChart, Assessment, Question, Answer, StandardSet, Enrollment
+from .models import User, Standard, KnowShowChart, Assessment, Question, Answer, StandardSet, Enrollment, \
+    StudentDataEntry
 from django.http import HttpResponse, JsonResponse
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -145,6 +146,7 @@ def getAssessment(request, pk):
     show = Assessment.objects.get(id=pk).know_show_chart.content['show']
     questionObjList = [{'question': question.text, 'answers': [{'correct': answer.correct, 'text': answer.text} for answer in question.get_answers()], 'ks': question.satisfied} for question in questionList]
     context = {
+        'assessmentId': pk,
         'know': know,
         'show': show,
         'questions': questionObjList
@@ -164,15 +166,16 @@ def getTeacherDashboard(request, pk):
 
 
 def getEnrollmentDashboard(request, pk):
-
     teachers = Enrollment.objects.values_list('teachers', flat=True).filter(id=pk)
+    students = [{'id': x, 'firstname': User.objects.get(id=x).first_name, 'lastname': User.objects.get(id=x).last_name} for x in Enrollment.objects.values_list('students', flat=True).filter(id=pk)]
+    print(students)
     if request.user.pk in teachers:
 
         #students = [{'firstname':getFirstName, 'lastname':getLastName, 'studentdataentries':getResultsObjects} for kiddos in db]
 
         context = {
             'title': Enrollment.objects.get(id=pk).title,
-            'students': list(Enrollment.objects.get(id=pk).students)
+            'students': students,
         }
 
         data = json.dumps(context)
@@ -180,4 +183,11 @@ def getEnrollmentDashboard(request, pk):
     else:
         print("Access denied")
 
+
+def updateStudentDataEntry(request, pk):
+    #data_entry = StudentDataEntry.objects.get(id=pk)
+    body = json.loads(request.body.decode('utf-8'))
+    print(body)
+
+    return HttpResponse(204)
 

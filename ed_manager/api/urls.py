@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import UserView, StandardView, KnowShowChartView, createKnowShow, MyTokenObtainPairView, createAssessment, \
     AssessmentView, getAssessment, getTeacherDashboard, createEnrollment, StandardSetView, StudentList, EnrollmentView, \
-    EnrollmentForDashboardView, getEnrollmentDashboard
+    EnrollmentForDashboardView, getEnrollmentDashboard, updateStudentDataEntry
 
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
@@ -20,6 +20,7 @@ urlpatterns = [
     path('createknowshow/', createKnowShow),
     path('createassessment/', createAssessment),
     path('createenrollment/', createEnrollment),
+    path('updatestudentdataentry/<int:pk>', updateStudentDataEntry),
     path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
