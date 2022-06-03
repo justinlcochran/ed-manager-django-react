@@ -35,13 +35,13 @@ function ViewAssessment() {
 
     let handleResultsSubmit = async (e) => {
         if (window.confirm('Are you sure you would like to submit your answers? You cannot edit once you have submitted.')) {
-            const serverURL = '/updatestudentdataentry/'
+            const serverURL = '/updatestudentdataentry/1'
             const response = await fetch(serverURL, {
-                method: "POST",
+                method: "PUT",
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({assessmentData: assessmentData, studentResponse: studentResponse , user: user})
+                body: JSON.stringify({assessmentId: assessmentData['assessmentId'], studentResponse: studentResponse , user: user})
             });
             const data = await response;
             return data

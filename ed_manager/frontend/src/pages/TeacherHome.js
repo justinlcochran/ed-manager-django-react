@@ -46,6 +46,9 @@ function TeacherHome(props) {
                     //     {item.title}: {item.subject}
                     // </li>
                 ))}
+                <Link to={`/create/enrollment/`}> <div className={"col-span-1 bg-green-400 hover:bg-green-500 rounded-2xl py-5 mt-4 mx-12"} id={"anim-div"}>
+                    <p className={"my-4 mx-4 text-3xl font-bold text-gray-700"}>+</p>
+                </div></Link>
             </div>
             </div>
         );

@@ -7,7 +7,7 @@ function EnrollmentDash(props) {
 
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
-    const [items, setItems] = useState([]);
+    const [items, setItems] = useState(null);
 
     let user = useContext(AuthContext)
     // Note: the empty deps array [] means
@@ -31,11 +31,19 @@ function EnrollmentDash(props) {
             )
     }, [])
 
-    return (
-        <div>
-            <p>{ items['title']}, { items['students']}</p>
-        </div>
-    );
+    console.log(items)
+    if (error) {
+        return <div>Error: {error.message}</div>;
+    } else if (!items) {
+        return <div>Loading...</div>;
+    } else {
+        return (
+            <div>
+                {items['students'].map(item => (
+                    <p>{item['firstname']}</p>))}
+            </div>
+        );
+    }
 }
 
 export default EnrollmentDash;
