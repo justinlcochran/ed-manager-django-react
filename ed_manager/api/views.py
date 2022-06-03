@@ -139,10 +139,10 @@ def createAssessment(request):
     return HttpResponse(status=201)
 
 
-def getAssessment(request):
-    questionList = Assessment.objects.get(id=1).get_questions()
-    know = Assessment.objects.get(id=1).know_show_chart.content['know']
-    show = Assessment.objects.get(id=1).know_show_chart.content['show']
+def getAssessment(request, pk):
+    questionList = Assessment.objects.get(id=pk).get_questions()
+    know = Assessment.objects.get(id=pk).know_show_chart.content['know']
+    show = Assessment.objects.get(id=pk).know_show_chart.content['show']
     questionObjList = [{'question': question.text, 'answers': [{'correct': answer.correct, 'text': answer.text} for answer in question.get_answers()], 'ks': question.satisfied} for question in questionList]
     context = {
         'know': know,
@@ -161,5 +161,23 @@ def getTeacherDashboard(request, pk):
     data = json.dumps(context)
 
     return JsonResponse(data, safe=False)
+
+
+def getEnrollmentDashboard(request, pk):
+
+    teachers = Enrollment.objects.values_list('teachers', flat=True).filter(id=pk)
+    if request.user.pk in teachers:
+
+        #students = [{'firstname':getFirstName, 'lastname':getLastName, 'studentdataentries':getResultsObjects} for kiddos in db]
+
+        context = {
+            'title': Enrollment.objects.get(id=pk).title,
+            'students': list(Enrollment.objects.get(id=pk).students)
+        }
+
+        data = json.dumps(context)
+        return JsonResponse(data, safe=False)
+    else:
+        print("Access denied")
 
 

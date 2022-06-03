@@ -19,7 +19,7 @@ function EnrollmentDash(props) {
             .then(
                 (result) => {
                     setIsLoaded(true);
-                    setItems(result);
+                    setItems(JSON.parse(result));
                 },
                 // Note: it's important to handle errors here
                 // instead of a catch() block so that we don't swallow
@@ -31,16 +31,9 @@ function EnrollmentDash(props) {
             )
     }, [])
 
-
-
     return (
         <div>
-            <ul>{items.map(item => (
-                <li key={item.id}>
-                    {item.title}: {item.subject} { item.teachers }
-                </li>
-            ))}
-            </ul>
+            <p>{ items['title']}, { items['students']}</p>
         </div>
     );
 }

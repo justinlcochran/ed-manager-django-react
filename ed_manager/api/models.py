@@ -103,3 +103,14 @@ class Answer(models.Model):
     def __str__(self):
         return f"question: {self.question}, answer: {self.text}, correct: {self.correct}"
 
+
+class StudentDataEntry(models.Model):
+    assessment = models.ForeignKey(Assessment, on_delete=models.CASCADE)
+    assigned = models.DateField(auto_now_add=True)
+    completion_status = models.BooleanField(default=False)
+    due_date = models.DateField()
+    student = models.ForeignKey(User, on_delete=models.CASCADE)
+    result = models.JSONField()
+
+
+

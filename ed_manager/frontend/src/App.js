@@ -38,7 +38,7 @@ function App() {
                   </CreateAssessmentProvider>
                 </StandardContextProvider>} />
               <Route path='/assign' element={<Assign />} />
-              <Route path='/viewassessment' element={<><NavBar /> <ViewAssessment /> </>} />
+              <Route path='/viewassessment/:assessmentId' element={<><NavBar /> <ViewAssessment /> </>} />
               <Route path='/create/enrollment' element={<><NavBar /> <CreateEnrollment /> </>} />
               <Route path='/enrollmentdash/:enrollmentId' element={<><NavBar /> <EnrollmentDash /> </>} />
               <Route path='/student' element={<><StudentNav /><StudentDash /></>} />
