@@ -68,6 +68,7 @@ class KnowShowChart(models.Model):
 
 
 class Assessment(models.Model):
+    title = models.CharField(max_length=200)
     know_show_chart = models.ForeignKey(KnowShowChart, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     created = models.DateField(auto_now_add=True)
@@ -109,6 +110,7 @@ class StudentDataEntry(models.Model):
     assigned = models.DateField(auto_now_add=True)
     completion_status = models.BooleanField(default=False)
     due_date = models.DateField()
+    enrollment = models.ForeignKey(Enrollment, on_delete=models.CASCADE)
     student = models.ForeignKey(User, on_delete=models.CASCADE)
     result = models.JSONField()
 

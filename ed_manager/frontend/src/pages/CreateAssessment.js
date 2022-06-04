@@ -9,7 +9,7 @@ import AuthContext from "../context/AuthContext";
 
 function CreateAssessment() {
     let {user} = useContext(AuthContext)
-    let {knowShowRequired, setKnowShowRequired, knowShowSatisfied, questionObjList} = useContext(CreateAssessmentContext)
+    let {knowShowRequired, setKnowShowRequired, knowShowSatisfied, questionObjList, assessment, setAssessment} = useContext(CreateAssessmentContext)
     let {selectedStandard} = useContext(StandardContext)
     let [knowShow, setKnowShow] = useState([])
 
@@ -29,7 +29,7 @@ function CreateAssessment() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({questions: questionObjList, user: user, knowShow: knowShowRequired})
+                body: JSON.stringify({questions: questionObjList, user: user, knowShow: knowShowRequired, title: assessment.title})
             });
             const data = await response;
             return data
@@ -39,6 +39,12 @@ function CreateAssessment() {
         }
     }
 
+    const handleTitleChange = (e) => {
+        let newAssessment = assessment
+        newAssessment.title = e.target.value
+        setAssessment(newAssessment)
+        console.log(assessment)
+    }
 
     useEffect(() => {
         fetch("/knowshowchart/")
@@ -62,6 +68,10 @@ function CreateAssessment() {
                     (chart.standard === selectedStandard.id &&
                         <KnowShowButton key={chart.id} chart={chart} />
                     )))}
+            <div>
+                <p>Title:</p>
+                <textarea onChange={handleTitleChange}/>
+            </div>
             <div className="grid sm:grid-cols-1 lg:grid-cols-2">
             {knowShowRequired.content.know.map(item => (
                     (knowShowSatisfied.includes(item))

@@ -119,7 +119,8 @@ def createAssessment(request):
         body = json.loads(request.body.decode('utf-8'))
         newAssessment = Assessment(
             know_show_chart=KnowShowChart.objects.get(id=body['knowShow']['id']),
-            author=User.objects.get(id=body['user']['user_id'])
+            author=User.objects.get(id=body['user']['user_id']),
+            title=body['title']
         )
         newAssessment.save()
         for questionObj in body['questions']:
@@ -182,6 +183,20 @@ def getEnrollmentDashboard(request, pk):
         return JsonResponse(data, safe=False)
     else:
         print("Access denied")
+
+
+def createStudentDataEntry(request):
+    if request.method == "POST":
+        body = json.loads(request.body.decode('utf-8'))
+        students = Enrollment.objects.values_list('students', flat=True).filter(id=body['enrollmentId'])
+        for student in students:
+            newDataEntry = StudentDataEntry(
+                assessment=Assessment.objects.get(id=body['assessmentId']),
+                enrollment=Enrollment.objects.get(id=body['enrollmentId']),
+                student=User.objects.get(id=student)
+            )
+        return HttpResponse(200)
+
 
 
 def updateStudentDataEntry(request, pk):

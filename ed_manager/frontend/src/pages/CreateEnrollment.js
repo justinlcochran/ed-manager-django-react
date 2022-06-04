@@ -11,7 +11,7 @@ function CreateEnrollment() {
     let [remainingStudents, setRemainingStudents] = useState([])
     let [selectedStudents, setSelectedStudents] = useState([])
     let [allStudents, setAllStudents] = useState([]);
-    // let [filter, setFilter] = useState(null);
+    let [filter, setFilter] = useState({text: null});
 
 
     let subjectsArr = ['English', 'Mathematics', 'Science', 'Social Studies', 'Elective']
@@ -47,7 +47,7 @@ function CreateEnrollment() {
             )
     }, [])
 
-    // let [filteredStudents, setFilteredStudents] = useState(remainingStudents);
+    let [filteredStudents, setFilteredStudents] = useState(remainingStudents);
 
     let handleGreenClick = (e) => {
         let newStudent = allStudents.find(item => item.id == e.target.id)
@@ -79,12 +79,11 @@ function CreateEnrollment() {
         setEnrollment(newEnrollment)
     }
 
-    // const handleFilterChange = (e) => {
-    //     let newFilter = e.target.value
-    //     setFilter(newFilter);
-    //     setFilteredStudents(remainingStudents.filter(student => student.first_name.includes(newFilter)))
-    //     console.log(filter, newFilter, filteredStudents)
-    // }
+    const handleFilterChange = (e) => {
+        let newFilter = filter
+        newFilter.text = e.target.value;
+        setFilteredStudents(remainingStudents.filter(student => student.first_name.toLowerCase().includes(newFilter.text.toLowerCase())))
+    }
 
     const handleSubmitEnrollment = async (e) => {
         if (window.confirm('Create a new enrollment?')) {
@@ -135,9 +134,12 @@ function CreateEnrollment() {
                         <p className={"my-4 text-3xl font-bold text-gray-700"}>{`${enrollment.standardSet.grade}th Grade: ${enrollment.standardSet.title}`}</p>}
                 </div>
                 <div className={"col-span-2 my-2"}>
+                    <p className={'col-span-1'}>Filter:</p>
+                    <textarea className={'col-span-1'} onChange={handleFilterChange} />
                     <p className={"text-2xl font-bold"}>Add Students:</p>
                     <div className={"grid grid-cols-2 grid-rows-2"}>
-                        <HoverList className={"col-span-1"} list={remainingStudents} color="bg-green-600" handleClick={handleGreenClick} />
+                        {(!filter.text) && <HoverList className={"col-span-1"} list={remainingStudents} color="bg-green-600" handleClick={handleGreenClick} />}
+                        {(filter.text) && <HoverList className={"col-span-1"} list={filteredStudents} color="bg-green-600" handleClick={handleGreenClick} />}
                         <HoverList className={"col-span-1"} list={selectedStudents} color="bg-red-600" handleClick={handleRedClick} />
                     </div>
                 </div>
