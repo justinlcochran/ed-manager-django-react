@@ -112,7 +112,7 @@ class StudentDataEntry(models.Model):
     due_date = models.DateField()
     enrollment = models.ForeignKey(Enrollment, on_delete=models.CASCADE)
     student = models.ForeignKey(User, on_delete=models.CASCADE)
-    result = models.JSONField()
+    result = models.JSONField(default={})
 
 
 

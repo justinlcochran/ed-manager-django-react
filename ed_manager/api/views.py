@@ -156,11 +156,29 @@ def getAssessment(request, pk):
     return JsonResponse(data, safe=False)
 
 
+def getStudentAssessment(request, pk):
+    assessmentId = StudentDataEntry.objects.get(id=pk).assessment_id
+    questionList = Assessment.objects.get(id=assessmentId).get_questions()
+    know = Assessment.objects.get(id=assessmentId).know_show_chart.content['know']
+    show = Assessment.objects.get(id=assessmentId).know_show_chart.content['show']
+    questionObjList = [{'question': question.text,
+                        'answers': [{'text': answer.text} for answer in
+                                    question.get_answers()], 'ks': question.satisfied} for question in questionList]
+    context = {
+        'assessmentId': assessmentId,
+        'know': know,
+        'show': show,
+        'questions': questionObjList,
+        'student': StudentDataEntry.objects.get(id=pk).student.id
+    }
+    data = json.dumps(context)
+    return JsonResponse(data, safe=False)
+
+
 def getTeacherDashboard(request, pk):
     context = {
         'enrollments': list(Enrollment.objects.filter(teachers__id=pk))
     }
-    print(context, 'This is printing')
     data = json.dumps(context)
 
     return JsonResponse(data, safe=False)
@@ -168,41 +186,86 @@ def getTeacherDashboard(request, pk):
 
 def getEnrollmentDashboard(request, pk):
     teachers = Enrollment.objects.values_list('teachers', flat=True).filter(id=pk)
-    students = [{'id': x, 'firstname': User.objects.get(id=x).first_name, 'lastname': User.objects.get(id=x).last_name} for x in Enrollment.objects.values_list('students', flat=True).filter(id=pk)]
-    print(students)
-    if request.user.pk in teachers:
+    students = [{'id': x,
+                 'firstname': User.objects.get(id=x).first_name,
+                 'lastname': User.objects.get(id=x).last_name,
+                 'scores': [{'standard': entry.assessment.get_standard().code, 'result': entry.result} for entry in StudentDataEntry.objects.filter(enrollment_id=pk, student__id=x)]} for x in Enrollment.objects.values_list('students', flat=True).filter(id=pk)]
 
-        #students = [{'firstname':getFirstName, 'lastname':getLastName, 'studentdataentries':getResultsObjects} for kiddos in db]
 
-        context = {
-            'title': Enrollment.objects.get(id=pk).title,
-            'students': students,
-        }
 
-        data = json.dumps(context)
-        return JsonResponse(data, safe=False)
-    else:
-        print("Access denied")
+    context = {
+        'title': Enrollment.objects.get(id=pk).title,
+        'students': students,
+        'standardSet': Enrollment.objects.get(id=pk).standardSet.title,
+        'standards': [{'code': x.code, 'text': x.text} for x in Enrollment.objects.get(id=pk).standardSet.get_standards()],
+
+    }
+
+    data = json.dumps(context)
+    return JsonResponse(data, safe=False)
+
+
+
+def getStudentDashboard(request, pk):
+    dataEntrySet = StudentDataEntry.objects.filter(student=pk).filter(completion_status=False)
+    resultsEntrySet = StudentDataEntry.objects.filter(student=pk).filter(completion_status=True)
+    context = {'assessments':
+                   [{
+                        'title': entry.assessment.title,
+                        'enrollment': entry.enrollment.title,
+                        'dueDate': str(entry.due_date),
+                        'assessment': entry.assessment.id,
+                        'id': entry.id} for entry in dataEntrySet],
+               'results':
+                    [{
+                        'title': entry.assessment.title,
+                        'enrollment': entry.enrollment.title,
+                        'dueDate': str(entry.due_date),
+                        'assessment': entry.assessment.id,
+                        'id': entry.id,
+                        'results': entry.result} for entry in resultsEntrySet]
+
+               }
+
+
+    data = json.dumps(context)
+    return JsonResponse(data, safe=False)
 
 
 def createStudentDataEntry(request):
     if request.method == "POST":
         body = json.loads(request.body.decode('utf-8'))
+        print(body)
         students = Enrollment.objects.values_list('students', flat=True).filter(id=body['enrollmentId'])
         for student in students:
             newDataEntry = StudentDataEntry(
                 assessment=Assessment.objects.get(id=body['assessmentId']),
                 enrollment=Enrollment.objects.get(id=body['enrollmentId']),
-                student=User.objects.get(id=student)
+                student=User.objects.get(id=student),
+                due_date=body['dueDate'][:10]
             )
+            newDataEntry.save()
         return HttpResponse(200)
 
 
-
 def updateStudentDataEntry(request, pk):
-    #data_entry = StudentDataEntry.objects.get(id=pk)
+    data_entry = StudentDataEntry.objects.get(id=pk)
+    assessment = data_entry.assessment
+    questions = assessment.get_questions()
     body = json.loads(request.body.decode('utf-8'))
-    print(body)
+    results = body['studentResponse']
+    for i in results:
+        questionObj = next((x for x in questions if x.text == i['question']), None)
+        correctAnswer = next((x for x in questionObj.get_answers() if x.correct == True), None).text
+        if i['response'] == correctAnswer:
+            i['score'] = True
+        else:
+            i['score'] = False
+            i['correctAnswer'] = correctAnswer
+    StudentDataEntry.objects.filter(id=pk).update(
+        result=results,
+        completion_status=True,
+    )
 
     return HttpResponse(204)
 

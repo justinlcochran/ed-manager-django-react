@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import HoverList from "../components/HoverList";
+import DatePicker from "react-datepicker";
+import 'react-datepicker/dist/react-datepicker.css'
 
 function Assign(props) {
 
@@ -8,6 +10,7 @@ function Assign(props) {
     let [allStudents, setAllStudents] = useState([]);
     let [remainingStudents, setRemainingStudents] = useState([])
     let [selectedStudents, setSelectedStudents] = useState([])
+    let [dueDate, setDueDate] = useState(new Date())
 
     let handleGreenClick = (e) => {
         let newStudent = allStudents.find(item => item.id === e.target.id)
@@ -41,6 +44,7 @@ function Assign(props) {
         <div className={"grid grid-cols-2"}>
             <HoverList className={"col-span-1"} list={remainingStudents} color="bg-green-600" handleClick={handleGreenClick} />
             <HoverList className={"col-span-1"} list={selectedStudents} color="bg-red-600" handleClick={handleRedClick} />
+            <DatePicker selected={dueDate} onChange={(date:Date) => setDueDate(date)}/>
         </div>
     );
 }

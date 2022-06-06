@@ -17,6 +17,7 @@ import StudentDash from "./pages/StudentDash";
 import RequireStaff from "./components/RequireStaff";
 import Assign from "./pages/Assign";
 import EnrollmentDash from "./pages/EnrollmentDash";
+import TakeAssessment from "./pages/TakeAssessment";
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
               <Route path='/create/enrollment' element={<><NavBar /> <CreateEnrollment /> </>} />
               <Route path='/enrollmentdash/:enrollmentId' element={<><NavBar /> <EnrollmentDash /> </>} />
               <Route path='/student' element={<><StudentNav /><StudentDash /></>} />
+              <Route path='/takeassessment/:dataEntryId' element={<><StudentNav /><TakeAssessment /></>} />
 
           </Routes>
         </AuthProvider>
