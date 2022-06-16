@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Standard, KnowShowChart, Assessment, StandardSet, Enrollment
+from .models import User, Standard, KnowShowChart, Assessment, StandardSet, Enrollment, PlanWeek
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -35,4 +35,10 @@ class StandardSetSerializer(serializers.ModelSerializer):
 class EnrollmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Enrollment
+        fields = '__all__'
+
+
+class PlanWeekSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PlanWeek
         fields = '__all__'

@@ -12,6 +12,7 @@ class StandardSet(models.Model):
                                                        ("Elective", "Elective"),
                                                        ))
     grade = models.IntegerField()
+    prep_title = models.CharField(max_length=200)
 
     def get_standards(self):
         return self.standard_set.all()
@@ -112,7 +113,16 @@ class StudentDataEntry(models.Model):
     due_date = models.DateField()
     enrollment = models.ForeignKey(Enrollment, on_delete=models.CASCADE)
     student = models.ForeignKey(User, on_delete=models.CASCADE)
-    result = models.JSONField(default={})
+    result = models.JSONField(default=dict)
 
 
+class PlanWeek(models.Model):
+    week_number = models.IntegerField(default=1)
+    monday = models.DateField()
+    daily_know_show = models.JSONField(default=dict)
+    teacher = models.ForeignKey(User, on_delete=models.CASCADE)
+    standard = models.ForeignKey(Standard, on_delete=models.CASCADE)
+    standard_set = models.ForeignKey(StandardSet, on_delete=models.CASCADE, default=0)
 
+    def get_prep_title(self):
+        return self.standard_set.prep_title

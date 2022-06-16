@@ -1,9 +1,13 @@
 from django.shortcuts import render
 from django.views.decorators.csrf import ensure_csrf_cookie
+from rest_framework.decorators import api_view, renderer_classes
 from rest_framework import generics
-from .serializers import UserSerializer, StandardSerializer, KnowShowChartSerializer, AssessmentSerializer, StandardSetSerializer, EnrollmentSerializer
+from rest_framework.response import Response
+from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
+from .serializers import UserSerializer, StandardSerializer, KnowShowChartSerializer, AssessmentSerializer, \
+    StandardSetSerializer, EnrollmentSerializer, PlanWeekSerializer
 from .models import User, Standard, KnowShowChart, Assessment, Question, Answer, StandardSet, Enrollment, \
-    StudentDataEntry
+    StudentDataEntry, PlanWeek
 from django.http import HttpResponse, JsonResponse
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -17,6 +21,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         # Add custom claims
         token['name'] = user.first_name
+        token['role'] = user.role
         # ...
 
         return token
@@ -140,6 +145,21 @@ def createAssessment(request):
     return HttpResponse(status=201)
 
 
+def createPlanWeek(request):
+    body = json.loads(request.body.decode('utf-8'))
+    print(body)
+    newPlanWeek = PlanWeek(
+        week_number=body['weekIndex'],
+        daily_know_show=body['dailyKnowShow'],
+        teacher=User.objects.get(id=body['user']),
+        standard_set=StandardSet.objects.get(id=body['standardSet']),
+        standard=Standard.objects.get(id=body['standard']['id']),
+        monday=body['startDate'][:10],
+    )
+    newPlanWeek.save()
+    return HttpResponse(status=201)
+
+
 def getAssessment(request, pk):
     questionList = Assessment.objects.get(id=pk).get_questions()
     know = Assessment.objects.get(id=pk).know_show_chart.content['know']
@@ -174,13 +194,22 @@ def getStudentAssessment(request, pk):
     return JsonResponse(data, safe=False)
 
 
+@api_view(('GET',))
+@renderer_classes((JSONRenderer,))
 def getTeacherDashboard(request, pk):
-    context = {
-        'enrollments': list(Enrollment.objects.filter(teachers__id=pk))
-    }
-    data = json.dumps(context)
 
-    return JsonResponse(data, safe=False)
+    enrollments = Enrollment.objects.filter(teachers__id=pk)
+    planWeeks = PlanWeek.objects.filter(teacher__id=pk)
+    standardSets = StandardSet.objects.all()
+    knowShowCharts = KnowShowChart.objects.all()
+    assessments = Assessment.objects.all()
+    enrollmentSerializer = EnrollmentSerializer(enrollments, many=True)
+    planWeeksSerializer = PlanWeekSerializer(planWeeks, many=True)
+    standardSetSerializer = StandardSetSerializer(standardSets, many=True)
+    knowShowChartsSerializer = KnowShowChartSerializer(knowShowCharts, many=True)
+    assessmentsSerializer = AssessmentSerializer(assessments, many=True)
+
+    return Response({'enrollments': enrollmentSerializer.data, 'planWeeks': planWeeksSerializer.data, 'standardSets': standardSetSerializer.data, 'knowShowCharts': knowShowChartsSerializer.data, 'assessments': assessmentsSerializer.data})
 
 
 def getEnrollmentDashboard(request, pk):

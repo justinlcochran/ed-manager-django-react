@@ -5,8 +5,6 @@ import {Navigate} from "react-router-dom";
 function RequireStaff({children}) {
     const {user} = useContext(AuthContext)
 
-
-
     return (user)
     ? (user.role != 'Student')
         ? children

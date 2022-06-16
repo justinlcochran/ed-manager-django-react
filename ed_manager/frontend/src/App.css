@@ -1,8 +1,10 @@
 body {
-  color: white;
   background: #282c34;
 }
 
+p {
+  color: white;
+}
 textarea {
   color: black;
   resize: none;
@@ -14,11 +16,6 @@ textarea {
 .App-logo {
   height: 40vmin;
   pointer-events: none;
-}
-
-DatePicker {
-  color:black
-
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -200,4 +197,11 @@ td {
 
 .title {
   text-transform: capitalize;
+}
+
+.grid-container {
+  display: grid;
+  grid-gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-auto-rows: 200px;
 }

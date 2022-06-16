@@ -18,6 +18,7 @@ import RequireStaff from "./components/RequireStaff";
 import Assign from "./pages/Assign";
 import EnrollmentDash from "./pages/EnrollmentDash";
 import TakeAssessment from "./pages/TakeAssessment";
+import PlanWeek from "./components/PlanWeek";
 
 function App() {
   return (
@@ -26,7 +27,14 @@ function App() {
         <AuthProvider>
             <Routes>
               <Route path='/login' element={<LoginPage />} />
-              <Route path='/' exact element={<RequireStaff><NavBar /> <TeacherHome /> </RequireStaff>} />
+              <Route path='/' exact element={<RequireStaff>
+                                              <StandardContextProvider>
+                                                <CreateAssessmentProvider>
+                                                  <NavBar />
+                                                  <TeacherHome />
+                                                </CreateAssessmentProvider>
+                                              </StandardContextProvider>
+                                            </RequireStaff>} />
               <Route path='/create' element={<RequireStaff><NavBar /> <TeacherCreate /> </RequireStaff>} />
               <Route path='/create/knowShowChart' element={
                 <StandardContextProvider>
