@@ -11,11 +11,9 @@ function QuestionInterface({questionObj, studentResponse, setStudentResponse}) {
                 }
             setStudentResponse(newStudentResponse)
             })
-            console.log(studentResponse)
         } else {
             let newResponse = {question: questionObj.question, response: e.target.id}
             setStudentResponse([...studentResponse, newResponse])
-            console.log(studentResponse)
         }
     }
 
@@ -28,7 +26,7 @@ function QuestionInterface({questionObj, studentResponse, setStudentResponse}) {
                 </div>
                 <div className="object-left bg-blue-300 col-span-3 rounded p-4 text-gray-700 text-left">
                     <>
-                        <p className={"mb-2 text-2xl font-bold text-center"}>{questionObj.question}</p>
+                        <p className={"mb-2 text-2xl font-bold text-center text-gray-800"}>{questionObj.question}</p>
 
                         <div>
                             {questionObj.answers.map(item => (

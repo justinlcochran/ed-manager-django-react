@@ -123,6 +123,7 @@ class PlanWeek(models.Model):
     teacher = models.ForeignKey(User, on_delete=models.CASCADE)
     standard = models.ForeignKey(Standard, on_delete=models.CASCADE)
     standard_set = models.ForeignKey(StandardSet, on_delete=models.CASCADE, default=0)
+    formative = models.ManyToManyField(Assessment, related_name="formativeAssessment")
 
     def get_prep_title(self):
         return self.standard_set.prep_title

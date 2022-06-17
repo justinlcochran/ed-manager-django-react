@@ -157,6 +157,8 @@ def createPlanWeek(request):
         monday=body['startDate'][:10],
     )
     newPlanWeek.save()
+    newPlanWeek.formative.set([Assessment.objects.get(id=body['assessment'])])
+
     return HttpResponse(status=201)
 
 

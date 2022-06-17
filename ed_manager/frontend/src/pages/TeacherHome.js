@@ -1,14 +1,16 @@
 import React, {useContext, useEffect, useState} from 'react';
 import AuthContext from "../context/AuthContext";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {ReactSortable} from "react-sortablejs";
 import StandardSelector from "../components/StandardSelector";
 import StandardContext from "../context/StandardContext";
 import KnowShowButton from "../components/KnowShowButton";
 import CreateAssessmentContext from "../context/CreateAssessmentContext";
 import Datepicker from "react-datepicker";
+import PlanWeek from "../components/PlanWeek";
 
 function TeacherHome(props) {
+    const navigate = useNavigate()
     const [localError, setLocalError] = useState(null);
     const [localIsLoaded, setLocalIsLoaded] = useState(false);
     const [items, setItems] = useState([]);
@@ -32,6 +34,7 @@ function TeacherHome(props) {
     const [weekIndex, setWeekIndex] = useState(1)
     const [startDate, setStartDate] = useState(new Date())
     const [assessments, setAssessments] = useState(null)
+    const [planWeeks, setPlanWeeks] = useState([])
     const [selectedAssessment, setSelectedAssessment] = useState(null)
     let {allStandards, selectedStandard, setSelectedStandard, error, isLoaded} = useContext(StandardContext)
 
@@ -57,7 +60,7 @@ function TeacherHome(props) {
                     setItems(result);
                     setPreps(result.standardSets.filter(item => result.enrollments.map(item => item.standardSet).includes(item.id)))
                     setKnowShow(result.knowShowCharts)
-                    console.log(result.planWeeks)
+                    setPlanWeeks(result.planWeeks)
                     setAssessments(result.assessments)
                 },
                 // Note: it's important to handle errors here
@@ -80,6 +83,7 @@ function TeacherHome(props) {
 
     let handlePrepClick = (e) => {
         setSelectedPrep(e.target.id)
+        setWeekIndex(planWeeks.filter(item => parseInt(item.standard_set) === parseInt(e.target.id)).length-1)
     }
 
     let handleAssessmentSelect = (e) => {
@@ -100,7 +104,7 @@ function TeacherHome(props) {
                     wednesday: wednesday,
                     thursday: thursday,
                     friday: friday
-                }, weekIndex: weekIndex, standard: selectedStandard, standardSet: selectedPrep, startDate: startDate, user: user.user.user_id
+                }, weekIndex: weekIndex, standard: selectedStandard, standardSet: selectedPrep, startDate: startDate, assessment: selectedAssessment, user: user.user.user_id
             })
         });
         const data = await response;
@@ -108,6 +112,11 @@ function TeacherHome(props) {
     }
 
     let sortableList = [...knowShowRequired.content.know, ...knowShowRequired.content.show, "Formative Assessment"]
+
+    let handleCreateKSClick = () => {
+        let path = '/create/knowshowchart'
+        navigate(path)
+    }
 
     if (error) {
         return <div>Error: {error.message}</div>;
@@ -126,16 +135,28 @@ function TeacherHome(props) {
                         </div>)}
                 </div>}
 
-                {(items.enrollments && selectedPrep) && <>
+                {(items.enrollments && selectedPrep && planWeeks.filter(item => parseInt(item.standard_set) === parseInt(selectedPrep)).length > weekIndex && weekIndex >= 0)
+                    ? <PlanWeek weekData={planWeeks.filter(item => parseInt(item.standard_set) === parseInt(selectedPrep))[weekIndex]} assessments={assessments} weekIndex={weekIndex} setWeekIndex={setWeekIndex}/>
+
+                    : (items.enrollments && selectedPrep && planWeeks.filter(item => parseInt(item.standard_set) === parseInt(selectedPrep)).length <= weekIndex | weekIndex < 0) ? <>
                     <div className={"p-4 bg-blue-900 rounded m-8"} key={`${selectedPrep}`}>
                         <div className={""}>
-                            <p className={"text-left text-2xl font-bold"}>Week {weekIndex}</p>
+                            <p className={"text-left text-2xl font-bold"}>Week {weekIndex+1}</p>
                             <StandardSelector className={"col-span-3"} standardSet={selectedPrep}/>
 
-                            {(!knowShowRequired.id) ? knowShow.map(chart => (
+                            {(!knowShowRequired.id) ? <>
+                                    {knowShow.map(chart => (
                                 ((chart.standard === selectedStandard.id) &&
                                     <KnowShowButton key={chart.id} chart={chart}/>
-                                ))) : <>
+                                ))) }
+
+                                    {(selectedStandard.id) &&
+                                        <p className={"bg-green-500 text-3xl font-bold p-3 rounded max-w-max hover:bg-green-400 cursor-pointer inline-block my-4"}
+                                           onClick={handleCreateKSClick}>Create KnowShow Chart</p>
+                                    }
+
+                                </>
+                                : <>
                                 <select className={"text-gray-600 text-2xl rounded mb-4"} defaultValue={'1'}
                                         onChange={handleAssessmentSelect} id="topicsDropDown"
                                         name="topicsDropDown">
@@ -150,12 +171,12 @@ function TeacherHome(props) {
                                     {sortableList.map(item =>
                                         (item === "Formative Assessment") ?
                                             <div className={"rounded-full bg-red-700 p-4 cursor-grab"}>
-                                                <p className={"text-gray-200 select-none font-bold text-2xl h-auto align-middle mt-12"}
+                                                <p className={"text-gray-200 select-none font-bold text-2xl align-middle mt-12"}
                                                    id={item}>{item}</p>
                                             </div>
                                             :
-                                            <div className={"rounded bg-amber-200 p-4 cursor-grab"}>
-                                                <p className={"py-2 text-gray-800 align-middle select-none"}
+                                            <div className={"rounded bg-amber-200 cursor-grab px-2"}>
+                                                <p className={"py-2 text-gray-800 select-none"}
                                                    id={item}>{item}</p>
                                             </div>
                                     )}
@@ -252,7 +273,9 @@ function TeacherHome(props) {
                             onClick={handleSaveWeek}>Save
                         </div>
                     </div>
-                    <p className={"my-4 mx-4 text-3xl font-bold text-gray-200"}>Enrollments:</p>
+                    </> : <p>Choose a Prep to Start Planning</p>}
+                {(selectedPrep) && <>
+                <p className={"my-4 mx-4 text-3xl font-bold text-gray-200"}>Enrollments:</p>
                     <div className={'grid grid-cols-4'}>
                         {(items.enrollments && selectedPrep) && items.enrollments.filter(item => item.standardSet === parseInt(selectedPrep)).map(item => (
                             <Link to={`/enrollmentdash/${item.id}`} key={`${item.id}`}>
@@ -269,11 +292,11 @@ function TeacherHome(props) {
                         <Link to={`/create/enrollment/`}>
                             <div className={"col-span-1 bg-green-400 hover:bg-green-500 rounded-2xl py-5 mt-4 mx-12"}
                                  id={"anim-div"}>
-                                <p className={"my-4 mx-4 text-3xl font-bold tcdext-gray-700"}>+</p>
+                                <p className={"my-4 mx-4 text-3xl font-bold text-gray-700"}>+</p>
                             </div>
                         </Link>
-                    </div>
-                </>}
+                    </div></>}
+
             </div>
         );
     }
